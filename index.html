@@ -124,20 +124,6 @@
             display: block;
         }
 
-        .shirt-mockup {
-            width: 75%;
-            height: 70%;
-            background-color: #3851a3;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-weight: 900;
-            font-size: 20px;
-            letter-spacing: 2px;
-        }
-
         /* --- FICHA DE COMPRA (COLUMNA DERECHA) --- */
         .product-info {
             display: flex;
@@ -208,7 +194,7 @@
             color: #ffffff;
         }
 
-        /* GRID DE MINIATURAS DE COLOR */
+        /* GRID DE MINIATURAS DE COLOR (3 COLUMNAS) */
         .color-picker {
             margin-top: 4px;
         }
@@ -222,8 +208,8 @@
 
         .color-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(3, 48px);
+            gap: 10px;
         }
 
         .color-thumb {
@@ -232,7 +218,7 @@
             border: 1px solid transparent;
             box-sizing: border-box;
             cursor: pointer;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, transform 0.1s;
         }
 
         .color-thumb.selected {
@@ -348,12 +334,8 @@
         </button>
 
         <div class="brand-logo">
-            <!-- REEMPLAZO DE LOGO -->
-            <!-- Si tienes una imagen de logo, reemplaza el <svg> por:
-                 <img src="tu-logo.png" alt="Logo"> -->
-            <svg viewBox="0 0 100 60">
-                <path d="M0 10 L100 10 L80 30 L100 50 L0 50 L20 30 Z" />
-            </svg>
+            <!-- REEMPLAZO DE LOGO: Cambia "logo.png" por el nombre de tu archivo de logo -->
+            <img src="logo.png" alt="Logo">
         </div>
 
         <div class="header-icons">
@@ -367,14 +349,14 @@
         
         <!-- VISTAS DEL PRODUCTO -->
         <section class="product-gallery">
-            <!-- FOTO 1 DEL ATLETA (Espalda / Vista Trasera) -->
-            <div class="gallery-item" id="gallery-item-1">
-                <div class="shirt-mockup">GYMSHARK</div>
+            <!-- FOTO 1: Vista Trasera / Espalda -->
+            <div class="gallery-item">
+                <img id="img-back" src="remera-negra-espalda.jpg" alt="Vista Trasera">
             </div>
             
-            <!-- FOTO 2 DEL ATLETA (Frente / Vista Frontal) -->
-            <div class="gallery-item" id="gallery-item-2">
-                <div class="shirt-mockup"></div>
+            <!-- FOTO 2: Vista Frontal / Frente -->
+            <div class="gallery-item">
+                <img id="img-front" src="remera-negra-frente.jpg" alt="Vista Frontal">
             </div>
         </section>
 
@@ -395,17 +377,30 @@
                 <button class="circle-btn" title="Compartir">➦</button>
             </div>
 
+            <!-- SELECCIÓN DE 3 COLORES ÚNICAMENTE -->
             <div class="color-picker">
-                <span class="color-label" id="color-name">Prussian Blue</span>
+                <span class="color-label" id="color-name">Black</span>
                 <div class="color-grid">
-                    <div class="color-thumb" data-color="White" style="background-color: #ffffff; border-color: #ccc;"></div>
-                    <div class="color-thumb" data-color="Grey" style="background-color: #7d8288;"></div>
-                    <div class="color-thumb" data-color="Black" style="background-color: #111111;"></div>
-                    <div class="color-thumb" data-color="Charcoal" style="background-color: #2b2b2b;"></div>
-                    <div class="color-thumb" data-color="Green" style="background-color: #3b4d45;"></div>
-                    <div class="color-thumb selected" data-color="Prussian Blue" style="background-color: #3851a3;"></div>
-                    <div class="color-thumb" data-color="Light Blue" style="background-color: #a3b8d8;"></div>
-                    <div class="color-thumb" data-color="Red" style="background-color: #a82020;"></div>
+                    <!-- Color 1: Negro (Seleccionado por defecto) -->
+                    <div class="color-thumb selected" 
+                         data-color="Black" 
+                         data-img-front="remera-negra-frente.jpg" 
+                         data-img-back="remera-negra-espalda.jpg" 
+                         style="background-color: #111111;"></div>
+
+                    <!-- Color 2: Rojo -->
+                    <div class="color-thumb" 
+                         data-color="Red" 
+                         data-img-front="remera-roja-frente.jpg" 
+                         data-img-back="remera-roja-espalda.jpg" 
+                         style="background-color: #a82020;"></div>
+
+                    <!-- Color 3: Blanco -->
+                    <div class="color-thumb" 
+                         data-color="White" 
+                         data-img-front="remera-blanca-frente.jpg" 
+                         data-img-back="remera-blanca-espalda.jpg" 
+                         style="background-color: #ffffff; border-color: #ccc;"></div>
                 </div>
             </div>
 
@@ -439,7 +434,7 @@
         © 2026 | Gymshark Limited | Todos los derechos reservados | Isla de Man
     </footer>
 
-    <!-- INTERACCIONES (JAVASCRIPT) -->
+    <!-- INTERACCIONES EN JAVASCRIPT -->
     <script>
         // 1. Selección de Talles
         const sizeBoxes = document.querySelectorAll('.size-box');
@@ -450,16 +445,33 @@
             });
         });
 
-        // 2. Selección de Colores
+        // 2. Cambio de Colores e Imágenes en vivo
         const colorThumbs = document.querySelectorAll('.color-thumb');
         const colorNameLabel = document.getElementById('color-name');
+        const imgFront = document.getElementById('img-front');
+        const imgBack = document.getElementById('img-back');
+
         colorThumbs.forEach(thumb => {
             thumb.addEventListener('click', () => {
+                // Cambiar clase selected entre los 3 colores
                 colorThumbs.forEach(t => t.classList.remove('selected'));
                 thumb.classList.add('selected');
+
+                // Actualizar texto del color
                 const colorName = thumb.getAttribute('data-color');
                 if (colorName && colorNameLabel) {
                     colorNameLabel.textContent = colorName;
+                }
+
+                // Cambiar las fuentes de las imágenes
+                const newImgFront = thumb.getAttribute('data-img-front');
+                const newImgBack = thumb.getAttribute('data-img-back');
+
+                if (newImgFront && imgFront) {
+                    imgFront.src = newImgFront;
+                }
+                if (newImgBack && imgBack) {
+                    imgBack.src = newImgBack;
                 }
             });
         });
