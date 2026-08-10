@@ -61,6 +61,12 @@
             justify-content: center;
         }
 
+        .brand-logo img {
+            max-height: 30px;
+            width: auto;
+            display: block;
+        }
+
         .brand-logo svg {
             width: 50px;
             height: 30px;
@@ -111,7 +117,13 @@
             overflow: hidden;
         }
 
-        /* Simulación visual de prendas con CSS puro */
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         .shirt-mockup {
             width: 75%;
             height: 70%;
@@ -187,6 +199,13 @@
             align-items: center;
             justify-content: center;
             font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .circle-btn.active {
+            background-color: #ff4d4d;
+            color: #ffffff;
         }
 
         /* GRID DE MINIATURAS DE COLOR */
@@ -212,11 +231,12 @@
             background-color: #ececec;
             border: 1px solid transparent;
             box-sizing: border-box;
+            cursor: pointer;
+            transition: border-color 0.2s;
         }
 
         .color-thumb.selected {
             border: 2px solid #111111;
-            background-color: #3851a3;
         }
 
         /* TALLES */
@@ -235,6 +255,7 @@
             text-decoration: underline;
             font-weight: 600;
             color: #111111;
+            cursor: pointer;
         }
 
         .size-grid {
@@ -250,6 +271,14 @@
             font-size: 10px;
             font-weight: 700;
             text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+        }
+
+        .size-box.selected {
+            border-color: #111111;
+            background-color: #111111;
+            color: #ffffff;
         }
 
         /* ENVÍO */
@@ -280,6 +309,12 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             margin-top: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .add-to-cart-btn:active {
+            transform: scale(0.99);
         }
 
         /* ==========================================
@@ -313,6 +348,9 @@
         </button>
 
         <div class="brand-logo">
+            <!-- REEMPLAZO DE LOGO -->
+            <!-- Si tienes una imagen de logo, reemplaza el <svg> por:
+                 <img src="tu-logo.png" alt="Logo"> -->
             <svg viewBox="0 0 100 60">
                 <path d="M0 10 L100 10 L80 30 L100 50 L0 50 L20 30 Z" />
             </svg>
@@ -329,10 +367,13 @@
         
         <!-- VISTAS DEL PRODUCTO -->
         <section class="product-gallery">
-            <div class="gallery-item">
+            <!-- FOTO 1 DEL ATLETA (Espalda / Vista Trasera) -->
+            <div class="gallery-item" id="gallery-item-1">
                 <div class="shirt-mockup">GYMSHARK</div>
             </div>
-            <div class="gallery-item">
+            
+            <!-- FOTO 2 DEL ATLETA (Frente / Vista Frontal) -->
+            <div class="gallery-item" id="gallery-item-2">
                 <div class="shirt-mockup"></div>
             </div>
         </section>
@@ -350,21 +391,21 @@
 
             <div class="actions-bar">
                 <div class="rating-btn">★ 4.8 (12)</div>
-                <button class="circle-btn">♡</button>
-                <button class="circle-btn">➦</button>
+                <button class="circle-btn" id="fav-btn" title="Favorito">♡</button>
+                <button class="circle-btn" title="Compartir">➦</button>
             </div>
 
             <div class="color-picker">
-                <span class="color-label">Prussian Blue</span>
+                <span class="color-label" id="color-name">Prussian Blue</span>
                 <div class="color-grid">
-                    <div class="color-thumb" style="background-color: #ffffff; border-color: #ccc;"></div>
-                    <div class="color-thumb" style="background-color: #7d8288;"></div>
-                    <div class="color-thumb" style="background-color: #111111;"></div>
-                    <div class="color-thumb" style="background-color: #2b2b2b;"></div>
-                    <div class="color-thumb" style="background-color: #3b4d45;"></div>
-                    <div class="color-thumb selected"></div>
-                    <div class="color-thumb" style="background-color: #a3b8d8;"></div>
-                    <div class="color-thumb" style="background-color: #a82020;"></div>
+                    <div class="color-thumb" data-color="White" style="background-color: #ffffff; border-color: #ccc;"></div>
+                    <div class="color-thumb" data-color="Grey" style="background-color: #7d8288;"></div>
+                    <div class="color-thumb" data-color="Black" style="background-color: #111111;"></div>
+                    <div class="color-thumb" data-color="Charcoal" style="background-color: #2b2b2b;"></div>
+                    <div class="color-thumb" data-color="Green" style="background-color: #3b4d45;"></div>
+                    <div class="color-thumb selected" data-color="Prussian Blue" style="background-color: #3851a3;"></div>
+                    <div class="color-thumb" data-color="Light Blue" style="background-color: #a3b8d8;"></div>
+                    <div class="color-thumb" data-color="Red" style="background-color: #a82020;"></div>
                 </div>
             </div>
 
@@ -388,7 +429,7 @@
                 ✓ Hay opciones de envío gratis opcionales <a href="#">Saber más</a>
             </div>
 
-            <button class="add-to-cart-btn">AÑADIR A LA CESTA</button>
+            <button class="add-to-cart-btn" id="add-to-cart">AÑADIR A LA CESTA</button>
         </section>
 
     </main>
@@ -397,6 +438,60 @@
     <footer>
         © 2026 | Gymshark Limited | Todos los derechos reservados | Isla de Man
     </footer>
+
+    <!-- INTERACCIONES (JAVASCRIPT) -->
+    <script>
+        // 1. Selección de Talles
+        const sizeBoxes = document.querySelectorAll('.size-box');
+        sizeBoxes.forEach(box => {
+            box.addEventListener('click', () => {
+                sizeBoxes.forEach(b => b.classList.remove('selected'));
+                box.classList.add('selected');
+            });
+        });
+
+        // 2. Selección de Colores
+        const colorThumbs = document.querySelectorAll('.color-thumb');
+        const colorNameLabel = document.getElementById('color-name');
+        colorThumbs.forEach(thumb => {
+            thumb.addEventListener('click', () => {
+                colorThumbs.forEach(t => t.classList.remove('selected'));
+                thumb.classList.add('selected');
+                const colorName = thumb.getAttribute('data-color');
+                if (colorName && colorNameLabel) {
+                    colorNameLabel.textContent = colorName;
+                }
+            });
+        });
+
+        // 3. Botón de Favorito
+        const favBtn = document.getElementById('fav-btn');
+        if (favBtn) {
+            favBtn.addEventListener('click', () => {
+                favBtn.classList.toggle('active');
+                favBtn.textContent = favBtn.classList.contains('active') ? '♥' : '♡';
+            });
+        }
+
+        // 4. Botón Añadir a la Cesta
+        const cartBtn = document.getElementById('add-to-cart');
+        if (cartBtn) {
+            cartBtn.addEventListener('click', () => {
+                const selectedSize = document.querySelector('.size-box.selected');
+                if (!selectedSize) {
+                    alert('Por favor, selecciona una talla antes de añadir a la cesta.');
+                    return;
+                }
+                const originalText = cartBtn.textContent;
+                cartBtn.textContent = '¡AÑADIDO!';
+                cartBtn.style.backgroundColor = '#2b9348';
+                setTimeout(() => {
+                    cartBtn.textContent = originalText;
+                    cartBtn.style.backgroundColor = '#000000';
+                }, 2000);
+            });
+        }
+    </script>
 
 </body>
 </html>
