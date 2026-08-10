@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gymshark - Product Detail Page</title>
+    <style>
+        /* ==========================================
+           1. RESET & REGLAS BASE
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #111111;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           2. HEADER (BARRA DE NAVEGACIÓN)
+           ========================================== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px;
+            border-bottom: 1px solid #e5e5e5;
+            background-color: #ffffff;
+        }
+
+        .header-menu-btn {
+            background: #f4f4f4;
+            border: none;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .header-menu-btn span {
+            display: block;
+            width: 16px;
+            height: 2px;
+            background-color: #111111;
+            box-shadow: 0 -5px 0 #111111, 0 5px 0 #111111;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo svg {
+            width: 50px;
+            height: 30px;
+            fill: #00b4d8;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* ==========================================
+           3. ESTRUCTURA PRINCIPAL (LAYOUT)
+           ========================================== */
+        main.product-page {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 32px;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* --- GALERÍA DE IMÁGENES (COLUMNA IZQUIERDA) --- */
+        .product-gallery {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .gallery-item {
+            background-color: #ede9e3;
+            aspect-ratio: 4 / 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Simulación visual de prendas con CSS puro */
+        .shirt-mockup {
+            width: 75%;
+            height: 70%;
+            background-color: #3851a3;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* --- FICHA DE COMPRA (COLUMNA DERECHA) --- */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .sku {
+            font-size: 10px;
+            font-weight: 700;
+            color: #767676;
+            letter-spacing: 1px;
+        }
+
+        .title-group h1 {
+            font-size: 18px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .title-group p {
+            font-size: 12px;
+            color: #767676;
+            margin-top: 2px;
+        }
+
+        .price {
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        /* BARRA DE VALORACIÓN Y ACCIONES */
+        .actions-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rating-btn {
+            background-color: #f4f4f4;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .circle-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #f4f4f4;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        /* GRID DE MINIATURAS DE COLOR */
+        .color-picker {
+            margin-top: 4px;
+        }
+
+        .color-label {
+            font-size: 11px;
+            color: #767676;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+
+        .color-thumb {
+            aspect-ratio: 1;
+            background-color: #ececec;
+            border: 1px solid transparent;
+            box-sizing: border-box;
+        }
+
+        .color-thumb.selected {
+            border: 2px solid #111111;
+            background-color: #3851a3;
+        }
+
+        /* TALLES */
+        .size-picker {
+            margin-top: 6px;
+        }
+
+        .size-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .size-guide {
+            text-decoration: underline;
+            font-weight: 600;
+            color: #111111;
+        }
+
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .size-box {
+            border: 1px solid #e5e5e5;
+            background: #ffffff;
+            padding: 8px 0;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* ENVÍO */
+        .shipping-note {
+            font-size: 11px;
+            color: #2b9348;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .shipping-note a {
+            color: #2b9348;
+            font-weight: 700;
+        }
+
+        /* BOTÓN DE AGREGAR AL CARRITO */
+        .add-to-cart-btn {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 24px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        /* ==========================================
+           4. FOOTER
+           ========================================== */
+        footer {
+            border-top: 1px solid #e5e5e5;
+            padding: 12px 24px;
+            font-size: 10px;
+            color: #767676;
+            margin-top: auto;
+        }
+
+        /* RESPONSIVE BASE */
+        @media (max-width: 850px) {
+            main.product-page {
+                grid-template-columns: 1fr;
+            }
+            .product-gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN -->
+    <header>
+        <button class="header-menu-btn" aria-label="Menú">
+            <span></span>
+        </button>
+
+        <div class="brand-logo">
+            <svg viewBox="0 0 100 60">
+                <path d="M0 10 L100 10 L80 30 L100 50 L0 50 L20 30 Z" />
+            </svg>
+        </div>
+
+        <div class="header-icons">
+            <button class="header-icon">🌐</button>
+            <button class="header-icon">🛒</button>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="product-page">
+        
+        <!-- VISTAS DEL PRODUCTO -->
+        <section class="product-gallery">
+            <div class="gallery-item">
+                <div class="shirt-mockup">GYMSHARK</div>
+            </div>
+            <div class="gallery-item">
+                <div class="shirt-mockup"></div>
+            </div>
+        </section>
+
+        <!-- INFORMACIÓN Y OPCIONES -->
+        <section class="product-info">
+            <span class="sku">A5A1Y</span>
+
+            <div class="title-group">
+                <h1>POWER T-SHIRT</h1>
+                <p>Oversized Fit</p>
+            </div>
+
+            <div class="price">£38</div>
+
+            <div class="actions-bar">
+                <div class="rating-btn">★ 4.8 (12)</div>
+                <button class="circle-btn">♡</button>
+                <button class="circle-btn">➦</button>
+            </div>
+
+            <div class="color-picker">
+                <span class="color-label">Prussian Blue</span>
+                <div class="color-grid">
+                    <div class="color-thumb" style="background-color: #ffffff; border-color: #ccc;"></div>
+                    <div class="color-thumb" style="background-color: #7d8288;"></div>
+                    <div class="color-thumb" style="background-color: #111111;"></div>
+                    <div class="color-thumb" style="background-color: #2b2b2b;"></div>
+                    <div class="color-thumb" style="background-color: #3b4d45;"></div>
+                    <div class="color-thumb selected"></div>
+                    <div class="color-thumb" style="background-color: #a3b8d8;"></div>
+                    <div class="color-thumb" style="background-color: #a82020;"></div>
+                </div>
+            </div>
+
+            <div class="size-picker">
+                <div class="size-header">
+                    <span>Seleccionar talla:</span>
+                    <span class="size-guide">Guía de tallas</span>
+                </div>
+                <div class="size-grid">
+                    <div class="size-box">XS</div>
+                    <div class="size-box">S</div>
+                    <div class="size-box">M</div>
+                    <div class="size-box">L</div>
+                    <div class="size-box">XL</div>
+                    <div class="size-box">XXL</div>
+                    <div class="size-box">3XL</div>
+                </div>
+            </div>
+
+            <div class="shipping-note">
+                ✓ Hay opciones de envío gratis opcionales <a href="#">Saber más</a>
+            </div>
+
+            <button class="add-to-cart-btn">AÑADIR A LA CESTA</button>
+        </section>
+
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        © 2026 | Gymshark Limited | Todos los derechos reservados | Isla de Man
+    </footer>
+
+</body>
+</html>
